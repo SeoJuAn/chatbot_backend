@@ -27,35 +27,35 @@ class ChatRequest(BaseModel):
 
 @app.get("/")
 def read_root():
-    try:
-        response = client.messages.create(
-            model="claude-3-5-sonnet-20240620",
-            max_tokens=1000,
-            temperature=0,
-            messages=[
-                {
-                    "role": "user",
-                    "content": [
-                        {
-                            "type": "text",
-                            "text": "안녕?"
-                        }
-                    ]
-                }
-            ]
-        )
-        # content가 리스트인 경우 첫 번째 요소의 text를 반환
-        if isinstance(response.content, list) and len(response.content) > 0:
-            return {"response": response.content[0].text}
-        # content가 딕셔너리인 경우 text 필드를 반환
-        elif isinstance(response.content, dict) and 'text' in response.content:
-            return {"response": response.content['text']}
-        # 그 외의 경우 문자열로 변환하여 반환
-        else:
-            return {"response": str(response.content)}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")
-    # return {"message": "Welcome to the chatbot API by JA"}
+    # try:
+    #     response = client.messages.create(
+    #         model="claude-3-5-sonnet-20240620",
+    #         max_tokens=1000,
+    #         temperature=0,
+    #         messages=[
+    #             {
+    #                 "role": "user",
+    #                 "content": [
+    #                     {
+    #                         "type": "text",
+    #                         "text": "안녕?"
+    #                     }
+    #                 ]
+    #             }
+    #         ]
+    #     )
+    #     # content가 리스트인 경우 첫 번째 요소의 text를 반환
+    #     if isinstance(response.content, list) and len(response.content) > 0:
+    #         return {"response": response.content[0].text}
+    #     # content가 딕셔너리인 경우 text 필드를 반환
+    #     elif isinstance(response.content, dict) and 'text' in response.content:
+    #         return {"response": response.content['text']}
+    #     # 그 외의 경우 문자열로 변환하여 반환
+    #     else:
+    #         return {"response": str(response.content)}
+    # except Exception as e:
+    #     raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")
+    return {"message": "Welcome to the chatbot API by JA"}
 
 @app.post("/chat")
 async def chat(request: ChatRequest):
