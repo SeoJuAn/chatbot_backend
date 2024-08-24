@@ -9,7 +9,7 @@ app = FastAPI()
 # CORS 미들웨어 추가
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://chatbot-frontend-dusky-alpha.vercel.app/"],  # 실제 프론트엔드 URL로 변경하세요
+    allow_origins=["https://chatbot-frontend-dusky-alpha.vercel.app"],  # 실제 프론트엔드 URL로 변경하세요
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -55,7 +55,7 @@ def read_root():
     #         return {"response": str(response.content)}
     # except Exception as e:
     #     raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")
-    return {"message": "Welcome to the chatbot API by JA"}
+    return {"message": "Welcome to the chatbot API by SJA"}
 
 @app.post("/chat")
 async def chat(request: ChatRequest):
