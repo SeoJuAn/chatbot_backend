@@ -3,6 +3,10 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import anthropic
+import logging
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 app = FastAPI()
 
@@ -55,10 +59,12 @@ def read_root():
     #         return {"response": str(response.content)}
     # except Exception as e:
     #     raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")
+    logger.info(f"Received default")
     return {"message": "Welcome to the chatbot API by SJA"}
 
 @app.post("/chat")
 async def chat(request: ChatRequest):
+    logger.info(f"Received chat request: {request.message}")
     try:
         response = client.messages.create(
             model="claude-3-5-sonnet-20240620",
@@ -76,6 +82,8 @@ async def chat(request: ChatRequest):
                 }
             ]
         )
+        logger.info("Received response from Anthropic API")
+
         # content가 리스트인 경우 첫 번째 요소의 text를 반환
         if isinstance(response.content, list) and len(response.content) > 0:
             return {"response": response.content[0].text}
