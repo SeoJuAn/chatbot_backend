@@ -27,7 +27,7 @@ class ChatRequest(BaseModel):
 
 @app.get("/")
 def read_root():
-    return {"message": "Welcome to the chatbot API"}
+    return {"message": "Welcome to the chatbot API by JA"}
 
 @app.post("/chat")
 async def chat(request: ChatRequest):
