@@ -59,7 +59,7 @@ def read_root():
     #         return {"response": str(response.content)}
     # except Exception as e:
     #     raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")
-    logger.info(f"Received default")
+    logging.info(f"Received default")
     return {"message": "Welcome to the chatbot API by SJA"}
 
 @app.post("/chat")
@@ -82,7 +82,7 @@ async def chat(request: ChatRequest):
                 }
             ]
         )
-        logger.info("Received response from Anthropic API")
+        logging.info("Received response from Anthropic API")
 
         # content가 리스트인 경우 첫 번째 요소의 text를 반환
         if isinstance(response.content, list) and len(response.content) > 0:
