@@ -82,20 +82,11 @@ async def generate_response(message):
             temperature=0,
             system="""너는 서주안을 도와주기 위해 만든 AI Assistant야. 최대한 사람들의 질문에 성심성의껏 답하도록해. 너는 Anthropic사의 Claude 3.5 모델을 사용해서 만들어졌어.\n""",
             messages=[
-                {
-                    "role": "user",
-                    "content": [
-                        {
-                            "type": "text",
-                            "text": message
-                        }
-                    ]
-                }
+                {"role": "user", "content": message}
             ]
         ) as stream:
-            for chunk in stream:
-                if chunk.delta.text:
-                    yield chunk.delta.text
+            for text in stream.text_stream:
+                yield text
     except Exception as e:
         logger.error(f"An error occurred: {str(e)}")
         yield f"An error occurred: {str(e)}"
