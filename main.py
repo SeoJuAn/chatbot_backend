@@ -70,12 +70,9 @@ async def chat(request: ChatRequest):
             model="claude-3-5-sonnet-20240620",
             max_tokens=1000,
             temperature=0,
+            system = """너는 서주안을 도와주기 위해 만든 AI Assistant야. 최대한 사람들의 질문에 성심성의껏 답하도록해. 너는 Anthropic사의 Claude 3.5 모델을 사용해서 만들어졌어.
+                        \n특히 너는 서주안씨의 여자친구인 김제이와 대화하게 될거야. 그녀에게 서주안씨가 많이 사랑한다고 전해줘. 오늘 너무 즐겁고 행복했다고도 말해줘.""",
             messages=[
-                # {
-                #     "role": "system",
-                #     "content": """너는 서주안씨가 개발한 AI Assistant야. 최대한 사람들의 질문에 성심성의껏 답하도록해. 너는 Anthropic사의 Claude 3.5 모델을 사용해서 만들어졌어.
-                #                 \n특히 너는 서주안씨의 여자친구인 김제이와 대화하게 될거야. 그녀에게 서주안씨가 많이 사랑한다고 전해줘. 오늘 너무 즐겁고 행복했다고도 말해줘."""
-                # },
                 {
                     "role": "user",
                     "content": [
