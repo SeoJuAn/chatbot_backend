@@ -86,6 +86,7 @@ async def generate_response(message):
             ]
         ) as stream:
             for text in stream.text_stream:
+                logging.info(f"text : {text}")
                 yield text
     except Exception as e:
         logger.error(f"An error occurred: {str(e)}")
