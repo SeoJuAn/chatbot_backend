@@ -1,9 +1,11 @@
 import os
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 import anthropic
 import logging
+import asyncio
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -31,71 +33,74 @@ class ChatRequest(BaseModel):
 
 @app.get("/")
 def read_root():
-    # try:
-    #     response = client.messages.create(
-    #         model="claude-3-5-sonnet-20240620",
-    #         max_tokens=1000,
-    #         temperature=0,
-    #         messages=[
-    #             {
-    #                 "role": "user",
-    #                 "content": [
-    #                     {
-    #                         "type": "text",
-    #                         "text": "안녕?"
-    #                     }
-    #                 ]
-    #             }
-    #         ]
-    #     )
-    #     # content가 리스트인 경우 첫 번째 요소의 text를 반환
-    #     if isinstance(response.content, list) and len(response.content) > 0:
-    #         return {"response": response.content[0].text}
-    #     # content가 딕셔너리인 경우 text 필드를 반환
-    #     elif isinstance(response.content, dict) and 'text' in response.content:
-    #         return {"response": response.content['text']}
-    #     # 그 외의 경우 문자열로 변환하여 반환
-    #     else:
-    #         return {"response": str(response.content)}
-    # except Exception as e:
-    #     raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")
     logging.info(f"Received default")
     return {"message": "Welcome to the chatbot API by SJA"}
 
-@app.post("/chat")
-async def chat(request: ChatRequest):
-    logger.info(f"Received chat request: {request.message}")
+# @app.post("/chat")
+# async def chat(request: ChatRequest):
+#     logger.info(f"Received chat request: {request.message}")
+#     try:
+#         response = client.messages.create(
+#             model="claude-3-5-sonnet-20240620",
+#             max_tokens=1000,
+#             temperature=0,
+#             system = """너는 서주안을 도와주기 위해 만든 AI Assistant야. 최대한 사람들의 질문에 성심성의껏 답하도록해. 너는 Anthropic사의 Claude 3.5 모델을 사용해서 만들어졌어.
+#                         \n""",
+#             messages=[
+#                 {
+#                     "role": "user",
+#                     "content": [
+#                         {
+#                             "type": "text",
+#                             "text": request.message
+#                         }
+#                     ]
+#                 }
+#             ]
+#         )
+#         logging.info("Received response from Anthropic API")
+
+#         # content가 리스트인 경우 첫 번째 요소의 text를 반환
+#         if isinstance(response.content, list) and len(response.content) > 0:
+#             return {"response": response.content[0].text}
+#         # content가 딕셔너리인 경우 text 필드를 반환
+#         elif isinstance(response.content, dict) and 'text' in response.content:
+#             return {"response": response.content['text']}
+#         # 그 외의 경우 문자열로 변환하여 반환
+#         else:
+#             return {"response": str(response.content)}
+#     except Exception as e:
+#         raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")
+
+
+
+async def generate_response(message):
     try:
-        response = client.messages.create(
+        with client.messages.stream(
             model="claude-3-5-sonnet-20240620",
             max_tokens=1000,
             temperature=0,
-            system = """너는 서주안을 도와주기 위해 만든 AI Assistant야. 최대한 사람들의 질문에 성심성의껏 답하도록해. 너는 Anthropic사의 Claude 3.5 모델을 사용해서 만들어졌어.
-                        \n특히 너는 서주안씨의 여자친구인 김제이와 대화하게 될거야. 그녀에게 서주안씨가 많이 사랑한다고 전해줘. 오늘 너무 즐겁고 행복했다고도 말해줘.""",
+            system="""너는 서주안을 도와주기 위해 만든 AI Assistant야. 최대한 사람들의 질문에 성심성의껏 답하도록해. 너는 Anthropic사의 Claude 3.5 모델을 사용해서 만들어졌어.\n""",
             messages=[
                 {
                     "role": "user",
                     "content": [
                         {
                             "type": "text",
-                            "text": request.message
+                            "text": message
                         }
                     ]
                 }
             ]
-        )
-        logging.info("Received response from Anthropic API")
-
-        # content가 리스트인 경우 첫 번째 요소의 text를 반환
-        if isinstance(response.content, list) and len(response.content) > 0:
-            return {"response": response.content[0].text}
-        # content가 딕셔너리인 경우 text 필드를 반환
-        elif isinstance(response.content, dict) and 'text' in response.content:
-            return {"response": response.content['text']}
-        # 그 외의 경우 문자열로 변환하여 반환
-        else:
-            return {"response": str(response.content)}
+        ) as stream:
+            for chunk in stream:
+                if chunk.delta.text:
+                    yield chunk.delta.text
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")
+        logger.error(f"An error occurred: {str(e)}")
+        yield f"An error occurred: {str(e)}"
 
-# Vercel 배포를 위해 if __name__ == "__main__": 부분은 제거됨
+@app.post("/chat")
+async def chat(request: ChatRequest):
+    logger.info(f"Received chat request: {request.message}")
+    return StreamingResponse(generate_response(request.message), media_type="text/plain")
