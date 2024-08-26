@@ -10,19 +10,13 @@ import asyncio
 # logging.basicConfig(level=logging.INFO)
 # logger = logging.getLogger(__name__)
 
-logger = logging.getLogger("uvicorn")
-logger.setLevel(logging.INFO)  # 로그 레벨 설정
+log_level = 'INFO'
+logger = logging.getLogger()
+logger.setLevel(log_level)
 
-# StreamHandler 생성
-stream_handler = logging.StreamHandler()
-stream_handler.setLevel(logging.INFO)  # 핸들러의 로그 레벨 설정
-
-# 로그 포맷 설정
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-stream_handler.setFormatter(formatter)
-
-# 로거에 핸들러 추가
-logger.addHandler(stream_handler)
+console_handler = logging.StreamHandler()
+console_handler.setLevel(log_level)
+logger.addHandler(console_handler)
 
 app = FastAPI()
 
