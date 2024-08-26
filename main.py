@@ -7,8 +7,22 @@ import anthropic
 import logging
 import asyncio
 
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+# logging.basicConfig(level=logging.INFO)
+# logger = logging.getLogger(__name__)
+
+logger = logging.getLogger("uvicorn")
+logger.setLevel(logging.INFO)  # 로그 레벨 설정
+
+# StreamHandler 생성
+stream_handler = logging.StreamHandler()
+stream_handler.setLevel(logging.INFO)  # 핸들러의 로그 레벨 설정
+
+# 로그 포맷 설정
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+stream_handler.setFormatter(formatter)
+
+# 로거에 핸들러 추가
+logger.addHandler(stream_handler)
 
 app = FastAPI()
 
@@ -91,7 +105,7 @@ async def generate_response(message):
     except Exception as e:
         logger.error(f"An error occurred: {str(e)}")
         yield f"An error occurred: {str(e)}"
-
+ 
 @app.post("/chat")
 async def chat(request: ChatRequest):
     logger.info(f"Received chat request: {request.message}")
