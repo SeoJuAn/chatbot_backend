@@ -4,9 +4,11 @@
       {
         "src": "main.py",
         "use": "@vercel/python",
-        "functions":{
-          "main.py":{
-            "maxDuration":30
+        "config":{
+          "functions":{
+            "main.py":{
+              "maxDuration":30
+            }
           }
         }
       }
