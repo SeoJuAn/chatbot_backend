@@ -44,11 +44,11 @@ def read_root():
     logging.info(f"Received default")
     return {"message": "Welcome to the chatbot API by SJA"}
 
-# @app.post("/chat")
+# @app.post("/chat_cach")
 # async def chat(request: ChatRequest):
 #     logger.info(f"Received chat request: {request.message}")
 #     try:
-#         response = client.messages.create(
+#         response = client.beta.prompt_caching.messages.create(
 #             model="claude-3-5-sonnet-20240620",
 #             max_tokens=1000,
 #             temperature=0,
@@ -60,7 +60,8 @@ def read_root():
 #                     "content": [
 #                         {
 #                             "type": "text",
-#                             "text": request.message
+#                             "text": request.message,
+#                             "cache_control" : {"type" : "ephemeral"}
 #                         }
 #                     ]
 #                 }
