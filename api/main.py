@@ -144,7 +144,7 @@ async def execute_sql(request: SQLRequest):
             model="claude-3-5-sonnet-20240620",
             max_tokens=1024,
             temperature=0,
-            system = """너는 주어진 데이터를 바탕으로 사용자의 쿼리 결과를 추출하는 AI야. 데이터는 CSV의 형태로 전달할 거고 한 파일이 한 테이블이라고 생각하면 돼.
+            system = """너는 주어진 데이터를 바탕으로 사용자의 쿼리 결과를 추출하는 AI야. 데이터는 DataFrame의 형태로 전달할 거고 하나의 DataFrame이 한 테이블이라고 생각하면 돼.
                         \n 반드시 아래 예시와 같은 형태로 쿼리 결과 테이블을 표현해야해.
                         \n <결과 예시>
                         \n
@@ -157,8 +157,6 @@ async def execute_sql(request: SQLRequest):
                                 {"days": "mon", "team": "dt", "rev": 3, "cost": 3}
                             ]
                         \n""" + f"""
-                        \n <사용자 쿼리>
-                        \n{request.sql}
                         \n\n(airlines 테이블)
                         \n{airlines_df}
                         \n\n(airports 테이블)
@@ -172,7 +170,7 @@ async def execute_sql(request: SQLRequest):
                     "content": [
                         {
                             "type": "text",
-                            "text": request.message,
+                            "text": request.sql,
                             "cache_control" : {"type" : "ephemeral"}
                         }
                     ]
@@ -180,6 +178,7 @@ async def execute_sql(request: SQLRequest):
             ]
         )
         logging.info("Received response from Cashing Ver Anthropic API")
+        logging.info(response)
 
         test_data = [
             {"days": "mon", "team": "data", "rev": 100, "cost": 10},
