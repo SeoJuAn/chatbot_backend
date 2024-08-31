@@ -179,7 +179,7 @@ async def execute_sql(request: SQLRequest):
             ]
         )
         logging.info("Received response from Cashing Ver Anthropic API")
-        logging.info(response)
+        logging.info(str(response.content))
 
         test_data = [
             {"days": "mon", "team": "data", "rev": 100, "cost": 10},
