@@ -1,11 +1,13 @@
 import os
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import StreamingResponse
+from fastapi.responses import StreamingResponse, JSONResponse
 from pydantic import BaseModel
 import anthropic
 import logging
 import asyncio
+import xml.etree.ElementTree as ET
+
 
 # logging.basicConfig(level=logging.INFO)
 # logger = logging.getLogger(__name__)
@@ -38,6 +40,9 @@ client = anthropic.Anthropic(api_key=api_key)
 
 class ChatRequest(BaseModel):
     message: str
+
+class SQLRequest(BaseModel):
+    sql: str
 
 @app.get("/")
 def read_root():
@@ -82,27 +87,6 @@ def read_root():
 #         raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")
 
 
-
-# async def generate_response(message):
-#     try:
-#         with client.messages.stream(
-#             model="claude-3-5-sonnet-20240620",
-#             max_tokens=1000,
-#             temperature=0,
-#             system="""너는 서주안을 도와주기 위해 만든 AI Assistant야. 최대한 사람들의 질문에 성심성의껏 답하도록해. 너는 Anthropic사의 Claude 3.5 모델을 사용해서 만들어졌어.\n""",
-#             messages=[
-#                 {"role": "user", "content": message}
-#             ]
-#         ) as stream:
-#             for text in stream.text_stream:
-#                 logging.info(f"text : {text}")
-#                 yield text
-#     except Exception as e:
-#         logger.error(f"An error occurred: {str(e)}")
-#         yield f"An error occurred: {str(e)}"
-
-import xml.etree.ElementTree as ET
-
 # XML 파일 읽기
 tree = ET.parse('./prompt/table_info.xml')
 root = tree.getroot()
@@ -136,3 +120,18 @@ async def generate_response(message):
 async def chat(request: ChatRequest):
     logger.info(f"Received chat request: {request.message}")
     return StreamingResponse(generate_response(request.message), media_type="text/plain")
+
+@app.post("/sql")
+async def execute_sql(request: SQLRequest):
+    logger.info(f"Received SQL request: {request.sql}")
+    try:
+        # 여기서는 테스트용 데이터를 반환합니다.
+        # 실제 구현에서는 이 부분을 데이터베이스 쿼리 실행 로직으로 대체해야 합니다.
+        test_data = [
+            {"mon": 1, "tue": 2, "wed": 3},
+            {"mon": 4, "tue": 5, "wed": 6}
+        ]
+        return JSONResponse(content=test_data)
+    except Exception as e:
+        logger.error(f"An error occurred while executing SQL: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")
