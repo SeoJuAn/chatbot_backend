@@ -7,7 +7,7 @@
   ],
   "functions":{
     "api/main.py":{
-      "maxDuration" : 20
+      "maxDuration" : 55
     }
   }
 }

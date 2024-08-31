@@ -83,13 +83,43 @@ def read_root():
 
 
 
+# async def generate_response(message):
+#     try:
+#         with client.messages.stream(
+#             model="claude-3-5-sonnet-20240620",
+#             max_tokens=1000,
+#             temperature=0,
+#             system="""너는 서주안을 도와주기 위해 만든 AI Assistant야. 최대한 사람들의 질문에 성심성의껏 답하도록해. 너는 Anthropic사의 Claude 3.5 모델을 사용해서 만들어졌어.\n""",
+#             messages=[
+#                 {"role": "user", "content": message}
+#             ]
+#         ) as stream:
+#             for text in stream.text_stream:
+#                 logging.info(f"text : {text}")
+#                 yield text
+#     except Exception as e:
+#         logger.error(f"An error occurred: {str(e)}")
+#         yield f"An error occurred: {str(e)}"
+
+import xml.etree.ElementTree as ET
+
+# XML 파일 읽기
+tree = ET.parse('chatbot_backend/prompt/table_info.xml')
+root = tree.getroot()
+
+# XML 내용을 문자열로 변환
+xml_content = ET.tostring(root, encoding='unicode')
+
 async def generate_response(message):
     try:
         with client.messages.stream(
             model="claude-3-5-sonnet-20240620",
             max_tokens=1000,
             temperature=0,
-            system="""너는 서주안을 도와주기 위해 만든 AI Assistant야. 최대한 사람들의 질문에 성심성의껏 답하도록해. 너는 Anthropic사의 Claude 3.5 모델을 사용해서 만들어졌어.\n""",
+            system=f"""너는 서주안을 도와주기 위해 만든 AI Assistant야. 최대한 사람들의 질문에 성심성의껏 답하도록해. 너는 Anthropic사의 Claude 3.5 모델을 사용해서 만들어졌어.
+                       \n만약 사용자가 쿼리 작성이나 테이블에 대한 정보를 물어본다면 아래 정보를 참고해서 대답해줘. 다음은 비행, 공항, 항공사에 관한 테이블 정보야:
+                       \n{xml_content}
+                    """,
             messages=[
                 {"role": "user", "content": message}
             ]
@@ -100,6 +130,7 @@ async def generate_response(message):
     except Exception as e:
         logger.error(f"An error occurred: {str(e)}")
         yield f"An error occurred: {str(e)}"
+
  
 @app.post("/chat")
 async def chat(request: ChatRequest):

@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database>
+  <table>
+    <table_name_eng>AIRLINE_CODE</table_name_eng>
+    <table_name_kor>항공사 코드</table_name_kor>
+    <columns>
+      <column>
+        <name_kor>IATA 코드</name_kor>
+        <name_eng>IATA_CODE</name_eng>
+      </column>
+      <column>
+        <name_kor>항공사</name_kor>
+        <name_eng>AIRLINE</name_eng>
+      </column>
+    </columns>
+  </table>
+  <table>
+    <table_name_eng>AIRPORT_INFO</table_name_eng>
+    <table_name_kor>공항 정보</table_name_kor>
+    <columns>
+      <column>
+        <name_kor>IATA 코드</name_kor>
+        <name_eng>IATA_CODE</name_eng>
+      </column>
+      <column>
+        <name_kor>공항</name_kor>
+        <name_eng>AIRPORT</name_eng>
+      </column>
+      <column>
+        <name_kor>도시</name_kor>
+        <name_eng>CITY</name_eng>
+      </column>
+      <column>
+        <name_kor>주</name_kor>
+        <name_eng>STATE</name_eng>
+      </column>
+      <column>
+        <name_kor>국가</name_kor>
+        <name_eng>COUNTRY</name_eng>
+      </column>
+      <column>
+        <name_kor>위도</name_kor>
+        <name_eng>LATITUDE</name_eng>
+      </column>
+      <column>
+        <name_kor>경도</name_kor>
+        <name_eng>LONGITUDE</name_eng>
+      </column>
+    </columns>
+  </table>
+  <table>
+    <table_name_eng>FLIGHTS</table_name_eng>
+    <table_name_kor>항공편</table_name_kor>
+    <columns>
+      <column>
+        <name_kor>년도</name_kor>
+        <name_eng>YEAR</name_eng>
+      </column>
+      <column>
+        <name_kor>월</name_kor>
+        <name_eng>MONTH</name_eng>
+      </column>
+      <column>
+        <name_kor>일</name_kor>
+        <name_eng>DAY</name_eng>
+      </column>
+      <column>
+        <name_kor>요일</name_kor>
+        <name_eng>DAY_OF_WEEK</name_eng>
+      </column>
+      <column>
+        <name_kor>항공사</name_kor>
+        <name_eng>AIRLINE</name_eng>
+      </column>
+      <column>
+        <name_kor>항공편 번호</name_kor>
+        <name_eng>FLIGHT_NUMBER</name_eng>
+      </column>
+      <column>
+        <name_kor>항공기 꼬리 번호</name_kor>
+        <name_eng>TAIL_NUMBER</name_eng>
+      </column>
+      <column>
+        <name_kor>출발 공항</name_kor>
+        <name_eng>ORIGIN_AIRPORT</name_eng>
+      </column>
+      <column>
+        <name_kor>도착 공항</name_kor>
+        <name_eng>DESTINATION_AIRPORT</name_eng>
+      </column>
+      <column>
+        <name_kor>예정 출발 시간</name_kor>
+        <name_eng>SCHEDULED_DEPARTURE</name_eng>
+      </column>
+      <column>
+        <name_kor>실제 출발 시간</name_kor>
+        <name_eng>DEPARTURE_TIME</name_eng>
+      </column>
+      <column>
+        <name_kor>출발 지연 시간</name_kor>
+        <name_eng>DEPARTURE_DELAY</name_eng>
+      </column>
+      <column>
+        <name_kor>지상 이동 시간 (출발)</name_kor>
+        <name_eng>TAXI_OUT</name_eng>
+      </column>
+      <column>
+        <name_kor>이륙 시간</name_kor>
+        <name_eng>WHEELS_OFF</name_eng>
+      </column>
+      <column>
+        <name_kor>예정 비행 시간</name_kor>
+        <name_eng>SCHEDULED_TIME</name_eng>
+      </column>
+      <column>
+        <name_kor>실제 비행 시간</name_kor>
+        <name_eng>ELAPSED_TIME</name_eng>
+      </column>
+      <column>
+        <name_kor>공중 비행 시간</name_kor>
+        <name_eng>AIR_TIME</name_eng>
+      </column>
+      <column>
+        <name_kor>비행 거리</name_kor>
+        <name_eng>DISTANCE</name_eng>
+      </column>
+      <column>
+        <name_kor>착륙 시간</name_kor>
+        <name_eng>WHEELS_ON</name_eng>
+      </column>
+      <column>
+        <name_kor>지상 이동 시간 (도착)</name_kor>
+        <name_eng>TAXI_IN</name_eng>
+      </column>
+      <column>
+        <name_kor>예정 도착 시간</name_kor>
+        <name_eng>SCHEDULED_ARRIVAL</name_eng>
+      </column>
+      <column>
+        <name_kor>실제 도착 시간</name_kor>
+        <name_eng>ARRIVAL_TIME</name_eng>
+      </column>
+      <column>
+        <name_kor>도착 지연 시간</name_kor>
+        <name_eng>ARRIVAL_DELAY</name_eng>
+      </column>
+      <column>
+        <name_kor>회항 여부</name_kor>
+        <name_eng>DIVERTED</name_eng>
+      </column>
+      <column>
+        <name_kor>취소 여부</name_kor>
+        <name_eng>CANCELLED</name_eng>
+      </column>
+      <column>
+        <name_kor>취소 사유</name_kor>
+        <name_eng>CANCELLATION_REASON</name_eng>
+      </column>
+      <column>
+        <name_kor>항공 시스템 지연</name_kor>
+        <name_eng>AIR_SYSTEM_DELAY</name_eng>
+      </column>
+      <column>
+        <name_kor>보안 지연</name_kor>
+        <name_eng>SECURITY_DELAY</name_eng>
+      </column>
+      <column>
+        <name_kor>항공사 지연</name_kor>
+        <name_eng>AIRLINE_DELAY</name_eng>
+      </column>
+      <column>
+        <name_kor>항공기 지연</name_kor>
+        <name_eng>LATE_AIRCRAFT_DELAY</name_eng>
+      </column>
+      <column>
+        <name_kor>날씨 지연</name_kor>
+        <name_eng>WEATHER_DELAY</name_eng>
+      </column>
+    </columns>
+  </table>
+</database>
