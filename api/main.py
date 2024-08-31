@@ -129,8 +129,11 @@ async def execute_sql(request: SQLRequest):
         # 실제 구현에서는 이 부분을 데이터베이스 쿼리 실행 로직으로 대체해야 합니다.
         test_data = [
             {"days": "mon", "team": "data", "rev": 100, "cost": 10},
-            {"days": "tue", "team": "cloud", "rev": 200, "cost": 100},
-            {"days": "wen", "team": "dt", "rev": 10, "cost": 100}
+            {"days": "tue", "team": "data", "rev": 1, "cost": 1},
+            {"days": "tue", "team": "cloud", "rev": 200, "cost": 20},
+            {"days": "wen", "team": "cloud", "rev": 2, "cost": 2},
+            {"days": "wen", "team": "dt", "rev": 300, "cost": 30},
+            {"days": "mon", "team": "dt", "rev": 3, "cost": 3}
         ]
         logging.info(f"test_data : {test_data}")
         return JSONResponse(content=test_data)
