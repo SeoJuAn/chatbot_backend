@@ -179,7 +179,7 @@ async def execute_sql(request: SQLRequest):
         )
         logging.info("Received response from Cashing Ver Anthropic API")
 
-        content = str(response.content)
+        content = response.content
         # TextBlock에서 텍스트 추출
         json_string = content[0].text
 
