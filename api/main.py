@@ -104,7 +104,7 @@ def read_root():
 import xml.etree.ElementTree as ET
 
 # XML 파일 읽기
-tree = ET.parse('chatbot_backend/prompt/table_info.xml')
+tree = ET.parse('./prompt/table_info.xml')
 root = tree.getroot()
 
 # XML 내용을 문자열로 변환
