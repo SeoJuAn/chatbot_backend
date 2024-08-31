@@ -8,6 +8,8 @@ import logging
 import asyncio
 import xml.etree.ElementTree as ET
 
+import pandas as pd
+
 
 # logging.basicConfig(level=logging.INFO)
 # logger = logging.getLogger(__name__)
@@ -127,6 +129,58 @@ async def execute_sql(request: SQLRequest):
     try:
         # 여기서는 테스트용 데이터를 반환합니다.
         # 실제 구현에서는 이 부분을 데이터베이스 쿼리 실행 로직으로 대체해야 합니다.
+
+        # CSV 파일 경로
+        airlines_file_path = './data/airlines.csv'
+        airports_file_path = './data/airports.csv'
+        flights_file_path = './data/flights.csv'
+
+        # CSV 파일을 DataFrame으로 읽기
+        airlines_df = pd.read_csv(airlines_file_path)
+        airports_df = pd.read_csv(airports_file_path)
+        flights_df = pd.read_csv(flights_file_path)
+
+        response = client.beta.prompt_caching.messages.create(
+            model="claude-3-5-sonnet-20240620",
+            max_tokens=1024,
+            temperature=0,
+            system = """너는 주어진 데이터를 바탕으로 사용자의 쿼리 결과를 추출하는 AI야. 데이터는 CSV의 형태로 전달할 거고 한 파일이 한 테이블이라고 생각하면 돼.
+                        \n 반드시 아래 예시와 같은 형태로 쿼리 결과 테이블을 표현해야해.
+                        \n <결과 예시>
+                        \n
+                            [
+                                {"days": "mon", "team": "data", "rev": 100, "cost": 10},
+                                {"days": "tue", "team": "data", "rev": 1, "cost": 1},
+                                {"days": "tue", "team": "cloud", "rev": 200, "cost": 20},
+                                {"days": "wen", "team": "cloud", "rev": 2, "cost": 2},
+                                {"days": "wen", "team": "dt", "rev": 300, "cost": 30},
+                                {"days": "mon", "team": "dt", "rev": 3, "cost": 3}
+                            ]
+                        \n""" + f"""
+                        \n <사용자 쿼리>
+                        \n{request.sql}
+                        \n\n(airlines 테이블)
+                        \n{airlines_df}
+                        \n\n(airports 테이블)
+                        \n{airports_df}
+                        \n\n(flights 테이블)
+                        \n{flights_df}
+                    """,
+            messages=[
+                {
+                    "role": "user",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": request.message,
+                            "cache_control" : {"type" : "ephemeral"}
+                        }
+                    ]
+                }
+            ]
+        )
+        logging.info("Received response from Cashing Ver Anthropic API")
+
         test_data = [
             {"days": "mon", "team": "data", "rev": 100, "cost": 10},
             {"days": "tue", "team": "data", "rev": 1, "cost": 1},
