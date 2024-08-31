@@ -191,16 +191,16 @@ async def execute_sql(request: SQLRequest):
         logging.info(table)
 
 
-        test_data = [
-            {"days": "mon", "team": "data", "rev": 100, "cost": 10},
-            {"days": "tue", "team": "data", "rev": 1, "cost": 1},
-            {"days": "tue", "team": "cloud", "rev": 200, "cost": 20},
-            {"days": "wen", "team": "cloud", "rev": 2, "cost": 2},
-            {"days": "wen", "team": "dt", "rev": 300, "cost": 30},
-            {"days": "mon", "team": "dt", "rev": 3, "cost": 3}
-        ]
-        logging.info(f"test_data : {test_data}")
-        return JSONResponse(content=test_data)
+        # test_data = [
+        #     {"days": "mon", "team": "data", "rev": 100, "cost": 10},
+        #     {"days": "tue", "team": "data", "rev": 1, "cost": 1},
+        #     {"days": "tue", "team": "cloud", "rev": 200, "cost": 20},
+        #     {"days": "wen", "team": "cloud", "rev": 2, "cost": 2},
+        #     {"days": "wen", "team": "dt", "rev": 300, "cost": 30},
+        #     {"days": "mon", "team": "dt", "rev": 3, "cost": 3}
+        # ]
+        # logging.info(f"test_data : {test_data}")
+        return JSONResponse(content=table)
     except Exception as e:
         logger.error(f"An error occurred while executing SQL: {str(e)}")
         raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")
