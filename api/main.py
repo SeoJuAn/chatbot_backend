@@ -128,9 +128,11 @@ async def execute_sql(request: SQLRequest):
         # 여기서는 테스트용 데이터를 반환합니다.
         # 실제 구현에서는 이 부분을 데이터베이스 쿼리 실행 로직으로 대체해야 합니다.
         test_data = [
-            {"mon": 1, "tue": 2, "wed": 3},
-            {"mon": 4, "tue": 5, "wed": 6}
+            {"days": "mon", "team": "data", "rev": 100, "cost": 10},
+            {"days": "tue", "team": "cloud", "rev": 200, "cost": 100},
+            {"days": "wen", "team": "dt", "rev": 10, "cost": 100}
         ]
+        logging.info(f"test_data : {test_data}")
         return JSONResponse(content=test_data)
     except Exception as e:
         logger.error(f"An error occurred while executing SQL: {str(e)}")
