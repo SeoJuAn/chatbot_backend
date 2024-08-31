@@ -7,9 +7,8 @@ import anthropic
 import logging
 import asyncio
 import xml.etree.ElementTree as ET
-
 import pandas as pd
-
+import json
 
 # logging.basicConfig(level=logging.INFO)
 # logger = logging.getLogger(__name__)
@@ -179,7 +178,18 @@ async def execute_sql(request: SQLRequest):
             ]
         )
         logging.info("Received response from Cashing Ver Anthropic API")
-        logging.info(str(response.content))
+
+        content = str(response.content)
+        # TextBlock에서 텍스트 추출
+        json_string = content[0].text
+
+        # JSON 문자열을 Python 객체로 변환
+        table = json.loads(json_string)
+
+
+        logging.info(type(table))
+        logging.info(table)
+
 
         test_data = [
             {"days": "mon", "team": "data", "rev": 100, "cost": 10},
