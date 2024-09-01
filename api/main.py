@@ -190,7 +190,6 @@ async def chat(request: ChatRequest):
 
                 for text in stream.text_stream:
                     logging.info(f"text : {text}")
-                    time.sleep(10)
                     yield text
         except Exception as e:
             logger.error(f"An error occurred: {str(e)}")
