@@ -41,7 +41,7 @@ if not api_key:
 client = anthropic.Anthropic(api_key=api_key)
 
 class ChatRequest(BaseModel):
-    message: str
+    message: list
 
 class SQLRequest(BaseModel):
     sql: str
@@ -161,7 +161,7 @@ async def chat(request_data: ChatRequest):
     streaming = True
     if streaming:
         async def response_stream_generator():
-            async for char in chat_core.stream_generate_message('claude', '', request_data.message, 2048, 0.7, 0.9, 40, []):
+            async for char in chat_core.stream_generate_message('claude', '', messages, 2048, 0.7, 0.9, 40, []):
                 yield char
 
         return StreamingResponse(response_stream_generator(), media_type="text/event-stream")
