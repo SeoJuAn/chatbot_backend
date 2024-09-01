@@ -156,6 +156,7 @@ chat_core = AIModelHandler()
 async def chat(request_data: ChatRequest):
     messages = request_data.message
 
+    logger.info(request_data.message)
     
     streaming = True
     if streaming:
