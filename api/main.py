@@ -9,7 +9,7 @@ import asyncio
 import xml.etree.ElementTree as ET
 import pandas as pd
 import json
-
+import time
 # logging.basicConfig(level=logging.INFO)
 # logger = logging.getLogger(__name__)
 
@@ -115,6 +115,7 @@ async def chat(request: ChatRequest):
             ) as stream:
                 for text in stream.text_stream:
                     logging.info(f"text : {text}")
+                    time.sleep(10)
                     yield text
         except Exception as e:
             logger.error(f"An error occurred: {str(e)}")
