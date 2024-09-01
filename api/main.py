@@ -157,7 +157,8 @@ async def generate_response(message):
 @app.post("/chat")
 async def chat(request: ChatRequest):
     logger.info(f"Received chat request: {request.message}")
-    return StreamingResponse(generate_response(request.message), media_type="text/plain")
+    # return StreamingResponse(generate_response(request.message), media_type="text/plain")
+    return JSONResponse(content=generate_response(request.message))
 
 
 
