@@ -124,7 +124,7 @@ async def chat(request: ChatRequest):
         try:
             text_all = 'hi i m tjkim. i am ai senior con'
             for text in text_all:
-                    yield text
+                    yield text+'\n'
         except Exception as e:
             logger.error(f"An error occurred: {str(e)}")
             yield f"An error occurred: {str(e)}"
