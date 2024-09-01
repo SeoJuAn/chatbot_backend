@@ -197,8 +197,8 @@ async def chat(request: ChatRequest):
             yield f"An error occurred: {str(e)}"
 
 
-    logger.info(f"Received chat request: {request.message}")
-    return StreamingResponse(generate_response(request.message), media_type="text/event-stream")
+    logger.info(f"Received chat request: {request.message[0]}")
+    return StreamingResponse(generate_response(request.message[0]), media_type="text/event-stream")
 
 @app.post("/sql")
 async def execute_sql(request: SQLRequest):
