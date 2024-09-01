@@ -97,108 +97,108 @@ root = tree.getroot()
 xml_content = ET.tostring(root, encoding='unicode')
 
 
-class AIModelHandler:
-    def __init__(self):
-        self.bedrock_runtime = boto3.client("bedrock-runtime", region_name='us-east-1')
+# class AIModelHandler:
+#     def __init__(self):
+#         self.bedrock_runtime = boto3.client("bedrock-runtime", region_name='us-east-1')
 
 
-    async def stream_generate_message(self, model, system_prompt, messages, max_tokens, temperature, top_p, top_k, stop_sequences):
-        if model.startswith("claude"):
-            async for char in self._stream_claude(system_prompt, messages, max_tokens, temperature, top_p, top_k, stop_sequences):
-                yield char
+#     async def stream_generate_message(self, model, system_prompt, messages, max_tokens, temperature, top_p, top_k, stop_sequences):
+#         if model.startswith("claude"):
+#             async for char in self._stream_claude(system_prompt, messages, max_tokens, temperature, top_p, top_k, stop_sequences):
+#                 yield char
 
 
-    async def _stream_claude(self, system_prompt, messages, max_tokens, temperature, top_p, top_k, stop_sequences):
-        prompt_config = {
-            "anthropic_version": "bedrock-2023-05-31",
-            "max_tokens": max_tokens,
-            "temperature": temperature,
-            "top_p": top_p,
-            "top_k":top_k,
-            "system": system_prompt,
-            "messages": self._format_messages(messages),
-            "stop_sequences": stop_sequences
-        }
-        model_id = "anthropic.claude-3-sonnet-20240229-v1:0"
-        body = json.dumps(prompt_config)
+#     async def _stream_claude(self, system_prompt, messages, max_tokens, temperature, top_p, top_k, stop_sequences):
+#         prompt_config = {
+#             "anthropic_version": "bedrock-2023-05-31",
+#             "max_tokens": max_tokens,
+#             "temperature": temperature,
+#             "top_p": top_p,
+#             "top_k":top_k,
+#             "system": system_prompt,
+#             "messages": self._format_messages(messages),
+#             "stop_sequences": stop_sequences
+#         }
+#         model_id = "anthropic.claude-3-sonnet-20240229-v1:0"
+#         body = json.dumps(prompt_config)
 
-        response = self.bedrock_runtime.invoke_model_with_response_stream(
-            body=body,
-            modelId=model_id
-        )
+#         response = self.bedrock_runtime.invoke_model_with_response_stream(
+#             body=body,
+#             modelId=model_id
+#         )
 
-        for event in response.get("body"):
-            chunk = json.loads(event["chunk"]["bytes"])
-            if chunk['type'] == 'content_block_delta':
-                if chunk['delta']['type'] == 'text_delta':
-                    text_chunk = chunk['delta']['text']
-                    for char in text_chunk:
-                        await asyncio.sleep(0.025)
-                        yield char
-
-
-
-    def _format_messages(self, messages):
-        formatted_messages = []
-        for i, msg in enumerate(messages):
-            role = "user" if i % 2 == 0 else "assistant"
-            formatted_messages.append({"role": role, "content": [{"type": "text", "text": msg}]})
-        return formatted_messages
+#         for event in response.get("body"):
+#             chunk = json.loads(event["chunk"]["bytes"])
+#             if chunk['type'] == 'content_block_delta':
+#                 if chunk['delta']['type'] == 'text_delta':
+#                     text_chunk = chunk['delta']['text']
+#                     for char in text_chunk:
+#                         await asyncio.sleep(0.025)
+#                         yield char
 
 
 
+#     def _format_messages(self, messages):
+#         formatted_messages = []
+#         for i, msg in enumerate(messages):
+#             role = "user" if i % 2 == 0 else "assistant"
+#             formatted_messages.append({"role": role, "content": [{"type": "text", "text": msg}]})
+#         return formatted_messages
 
-chat_core = AIModelHandler()
 
 
 
-@app.post("/chat")
-async def chat(request_data: ChatRequest):
-    messages = request_data.message
-
-    logger.info(request_data.message)
-
-    streaming = True
-    if streaming:
-        async def response_stream_generator():
-            async for char in chat_core.stream_generate_message('claude', '', messages, 2048, 0.7, 0.9, 40, []):
-                yield char
-
-        return StreamingResponse(response_stream_generator(), media_type="text/event-stream")
+# chat_core = AIModelHandler()
 
 
 
 # @app.post("/chat")
-# async def chat(request: ChatRequest):
-#     async def generate_response(message):
-#         try:
-#             with client.messages.stream(
-#                 model="claude-3-5-sonnet-20240620",
-#                 max_tokens=1000,
-#                 temperature=0,
-#                 system=f"""너는 서주안을 도와주기 위해 만든 AI Assistant야. 최대한 사람들의 질문에 성심성의껏 답하도록해. 너는 Anthropic사의 Claude 3.5 모델을 사용해서 만들어졌어.
-#                         \n만약 사용자가 쿼리 작성이나 테이블에 대한 정보를 물어본다면 아래 정보를 참고해서 대답해줘. 다음은 비행, 공항, 항공사에 관한 테이블 정보야:
-#                         \n{xml_content}
-#                         """,
-#                 messages=[
-#                     {"role": "user", "content": message}
-#                 ]
-#             ) as stream:
+# async def chat(request_data: ChatRequest):
+#     messages = request_data.message
+
+#     logger.info(request_data.message)
+
+#     streaming = True
+#     if streaming:
+#         async def response_stream_generator():
+#             async for char in chat_core.stream_generate_message('claude', '', messages, 2048, 0.7, 0.9, 40, []):
+#                 yield char
+
+#         return StreamingResponse(response_stream_generator(), media_type="text/event-stream")
+
+
+
+@app.post("/chat")
+async def chat(request: ChatRequest):
+    async def generate_response(message):
+        try:
+            with client.messages.stream(
+                model="claude-3-5-sonnet-20240620",
+                max_tokens=1000,
+                temperature=0,
+                system=f"""너는 서주안을 도와주기 위해 만든 AI Assistant야. 최대한 사람들의 질문에 성심성의껏 답하도록해. 너는 Anthropic사의 Claude 3.5 모델을 사용해서 만들어졌어.
+                        \n만약 사용자가 쿼리 작성이나 테이블에 대한 정보를 물어본다면 아래 정보를 참고해서 대답해줘. 다음은 비행, 공항, 항공사에 관한 테이블 정보야:
+                        \n{xml_content}
+                        """,
+                messages=[
+                    {"role": "user", "content": message}
+                ]
+            ) as stream:
                 
-#                 for text in stream.text_stream:
-#                     print(text, end="", flush=True)
+                for text in stream.text_stream:
+                    print(text, end="", flush=True)
 
-#                 for text in stream.text_stream:
-#                     logging.info(f"text : {text}")
-#                     time.sleep(10)
-#                     yield text
-#         except Exception as e:
-#             logger.error(f"An error occurred: {str(e)}")
-#             yield f"An error occurred: {str(e)}"
+                for text in stream.text_stream:
+                    logging.info(f"text : {text}")
+                    time.sleep(10)
+                    yield text
+        except Exception as e:
+            logger.error(f"An error occurred: {str(e)}")
+            yield f"An error occurred: {str(e)}"
 
 
-#     logger.info(f"Received chat request: {request.message}")
-#     return StreamingResponse(generate_response(request.message), media_type="text/event-stream")
+    logger.info(f"Received chat request: {request.message}")
+    return StreamingResponse(generate_response(request.message), media_type="text/event-stream")
 
 @app.post("/sql")
 async def execute_sql(request: SQLRequest):
