@@ -116,19 +116,20 @@ xml_content = ET.tostring(root, encoding='unicode')
 #         logger.error(f"An error occurred: {str(e)}")
 #         yield f"An error occurred: {str(e)}"
 
-async def generate_response(message):
-    try:
-        text_all = 'hi i m tjkim'
-        for text in text_all:
-                yield text
-    except Exception as e:
-        logger.error(f"An error occurred: {str(e)}")
-        yield f"An error occurred: {str(e)}"
+
 
 @app.post("/chat")
 async def chat(request: ChatRequest):
+    async def generate_response(message):
+        try:
+            text_all = 'hi i m tjkim. i am ai senior con'
+            for text in text_all:
+                    yield text
+        except Exception as e:
+            logger.error(f"An error occurred: {str(e)}")
+            yield f"An error occurred: {str(e)}"
     logger.info(f"Received chat request: {request.message}")
-    return StreamingResponse(generate_response(request.message), media_type="text/plain")
+    return StreamingResponse(generate_response(request.message), media_type="text/event-stream")
 
 @app.post("/sql")
 async def execute_sql(request: SQLRequest):
