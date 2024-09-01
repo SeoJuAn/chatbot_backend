@@ -13,6 +13,7 @@ import time
 # logging.basicConfig(level=logging.INFO)
 # logger = logging.getLogger(__name__)
 import boto3
+
 log_level = 'INFO'
 logger = logging.getLogger()
 logger.setLevel(log_level)
@@ -149,14 +150,11 @@ class AIModelHandler:
 
 chat_core = AIModelHandler()
 
-class ChatRequest(BaseModel):
-    messages: list
-
 
 
 @app.post("/chat")
 async def chat(request_data: ChatRequest):
-    messages = request_data.messages
+    messages = request_data.message
 
     
     streaming = True
