@@ -98,7 +98,7 @@ xml_content = ET.tostring(root, encoding='unicode')
 async def generate_response(message):
     try:
         with client.messages.stream(
-            model="claude-3-5-sonnet-20240620",
+            model="claude-3-sonnet-20240229",
             max_tokens=1000,
             temperature=0,
             system=f"""너는 서주안을 도와주기 위해 만든 AI Assistant야. 최대한 사람들의 질문에 성심성의껏 답하도록해. 너는 Anthropic사의 Claude 3.5 모델을 사용해서 만들어졌어.
@@ -177,8 +177,8 @@ async def execute_sql(request: SQLRequest):
         airports_df = pd.read_csv(airports_file_path)
         flights_df = pd.read_csv(flights_file_path)
 
-        response = client.beta.prompt_caching.messages.create(
-            model="claude-3-5-sonnet-20240620",
+        response = client.messages.create(
+            model="claude-3-sonnet-20240229",
             max_tokens=1024,
             temperature=0,
             system = """너는 주어진 데이터를 바탕으로 사용자의 쿼리 결과를 추출하는 AI야. 데이터는 DataFrame의 형태로 전달할 거고 하나의 DataFrame이 한 테이블이라고 생각하면 돼.
@@ -208,8 +208,7 @@ async def execute_sql(request: SQLRequest):
                     "content": [
                         {
                             "type": "text",
-                            "text": request.sql,
-                            "cache_control" : {"type" : "ephemeral"}
+                            "text": request.sql
                         }
                     ]
                 }
